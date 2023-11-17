@@ -1,6 +1,7 @@
 package bank_account;
 
 import java.util.Scanner;
+import bank_account.model.Account;
 import bank_account.util.Colors;
 
 public class Menu {
@@ -11,6 +12,10 @@ public class Menu {
 
 	public static void main(String[] args) {
 
+		Account account = new Account(1, 100, 1, "Antonio vinicius", 20000.00d);
+
+		System.out.println(account);
+		
 		int option;
 
 		do {
@@ -18,7 +23,7 @@ public class Menu {
 			option = read.nextInt();
 
 		} while (option != 9);
-		
+
 		showAboutProgram();
 
 	}
@@ -42,7 +47,7 @@ public class Menu {
 		System.out.println(Colors.TEXT_RESET);
 
 	}
-	
+
 	public static void showAboutProgram() {
 		System.out.println(theme + "o-------------------------------------------------------o");
 		System.out.println(theme + "| Project: Bank Account                                 |");
@@ -51,7 +56,5 @@ public class Menu {
 		System.out.println(theme + "| Generation Brasil - generation@generation.org         |");
 		System.out.println(theme + "o-------------------------------------------------------o");
 	}
-	
-	
 
 }
