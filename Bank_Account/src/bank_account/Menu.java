@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import bank_account.model.*;
 import bank_account.util.Colors;
+import bank_account.util.Converter;
 
 public class Menu {
 
@@ -13,26 +14,10 @@ public class Menu {
 
 	public static void main(String[] args) {
 
-		Current_Account currentAccount = new Current_Account(20, 410, 1, "Antonio Bandeira", 
-				1400.00d, 500.00d);
+		Savings_Account savesAccount = new Savings_Account(20, 410, 1, "Antonio Bandeira", 
+				1400.00d, Converter.stringToLocalDate("02/03/2023"));
 
-		System.out.println(currentAccount);
-
-		currentAccount.withdraw(1900.00);
-
-		System.out.println(currentAccount);
-
-		currentAccount.deposit(100.00);
-
-		System.out.println(currentAccount);
-		
-		currentAccount.deposit(100.00);
-		
-		System.out.println(currentAccount);
-		
-		currentAccount.withdraw(200.00);
-		
-		System.out.println(currentAccount);
+		System.out.println(savesAccount);
 
 		int option;
 
