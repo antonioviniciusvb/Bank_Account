@@ -1,7 +1,8 @@
 package bank_account;
 
 import java.util.Scanner;
-import bank_account.model.Account;
+
+import bank_account.model.*;
 import bank_account.util.Colors;
 
 public class Menu {
@@ -12,10 +13,27 @@ public class Menu {
 
 	public static void main(String[] args) {
 
-		Account account = new Account(1, 100, 1, "Antonio vinicius", 20000.00d);
+		Current_Account currentAccount = new Current_Account(20, 410, 1, "Antonio Bandeira", 
+				1400.00d, 500.00d);
 
-		System.out.println(account);
+		System.out.println(currentAccount);
+
+		currentAccount.withdraw(1900.00);
+
+		System.out.println(currentAccount);
+
+		currentAccount.deposit(100.00);
+
+		System.out.println(currentAccount);
 		
+		currentAccount.deposit(100.00);
+		
+		System.out.println(currentAccount);
+		
+		currentAccount.withdraw(200.00);
+		
+		System.out.println(currentAccount);
+
 		int option;
 
 		do {
