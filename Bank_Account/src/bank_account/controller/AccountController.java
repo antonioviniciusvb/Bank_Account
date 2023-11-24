@@ -17,9 +17,9 @@ public class AccountController implements AccountRepository {
 		var account = findAccount(accountNumber);
 
 		if (account.isPresent())
-			System.out.println(Colors.ANSI_GREEN_BACKGROUND + account.get());
+			System.out.println(Colors.sucess + account.get());
 		else
-			System.err.println("Account number not found");
+			System.out.println(Colors.failed + "Account number not found");
 
 	}
 
@@ -32,14 +32,14 @@ public class AccountController implements AccountRepository {
 	@Override
 	public void listAll() {
 
-		accounts.forEach(account -> System.out.println(account));
+		accounts.forEach(account -> System.out.println(Colors.sucess + account));
 
 	}
 
 	@Override
 	public void registrer(Account account) {
 		accounts.add(account);
-		System.out.printf(Colors.ANSI_GREEN_BACKGROUND + "Account %d successfully created\n", account.getNumber());
+		System.out.printf(Colors.sucess + "Account %d successfully created\n", account.getNumber());
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class AccountController implements AccountRepository {
 
 		if (findAccount.isPresent()) {
 			accounts.set(accounts.indexOf(findAccount.get()), account);
-			System.out.printf("Account number: %d has been successfully removed\n", account.getNumber());
+			System.out.printf(Colors.sucess + "Account: %d was updated successfully\n", account.getNumber());
 		} else
-			System.err.println("Account number not found");
+			System.out.println(Colors.failed + "Account number not found");
 
 	}
 
@@ -62,21 +62,35 @@ public class AccountController implements AccountRepository {
 
 		if (account.isPresent())
 			if (accounts.remove(account.get()))
-				System.out.printf("Account number: %d has been successfully removed\n", account.get());
+				System.out.printf(Colors.sucess + "Account: %d has been successfully removed\n", number);
 			else
-				System.err.println("Account number not found");
+				System.out.println(Colors.failed + "Account number not found");
 
 	}
 
 	@Override
 	public void withdraw(int number, double value) {
-		// TODO Auto-generated method stub
+
+		var account = findAccount(number);
+
+		if (account.isPresent()) {
+			if (account.get().withdraw(value))
+				System.out.printf(Colors.sucess + "The withdrawal of $ %.2f made successfully\n", value);
+		} else
+			System.out.println(Colors.failed + "Account number not found");
 
 	}
 
 	@Override
 	public void deposit(int number, double value) {
-		// TODO Auto-generated method stub
+
+		var account = findAccount(number);
+
+		if (account.isPresent()) {
+			account.get().deposit(value);
+			System.out.printf(Colors.sucess + "The Deposit of $ %.2f made successfully\n", value);
+		} else
+			System.out.println(Colors.failed + "Account number not found");
 
 	}
 

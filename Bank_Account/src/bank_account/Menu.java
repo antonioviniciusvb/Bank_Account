@@ -9,45 +9,83 @@ import bank_account.model.Current_Account;
 import bank_account.model.Savings_Account;
 import bank_account.util.Colors;
 import bank_account.util.Converter;
+import bank_account.util.Text;
 import bank_account.util.Validator;
 
 public class Menu {
 
+	public static String optionsMenuMain = "o--------------------------------------------------o\n"
+			+ "|-------------- BANCO GENERATION BRAZIL -----------|\n"
+			+ "o--------------------------------------------------o\n"
+			+ "|            1- Create Account                     |\n"
+			+ "|            2- List All Accounts                  |\n"
+			+ "|            3- Find Account by number             |\n"
+			+ "|            4- Update Data of Account             |\n"
+			+ "|            5- Delete Account                     |\n"
+			+ "|            6- Withdraw Money                     |\n"
+			+ "|            7- Cash Deposit                       |\n"
+			+ "|            8- Make Transfers                     |\n"
+			+ "|            9- Exit                               |\n"
+			+ "o--------------------------------------------------o\n"
+			+ "|           Select the desired option:             |\n"
+			+ "o--------------------------------------------------o";
+
 	public static Scanner read = new Scanner(System.in);
+
+	static AccountController controller = new AccountController();
 
 	public static void main(String[] args) {
 
-		AccountController controller = new AccountController();
-
-		char option;
+		int option;
 
 		do {
 
-			showOperationsMenu();
-			option = getCharInput("");
+			showOptionsMain();
+			option = getIntegerInput("");
+			System.out.println();
+
+			showOperation(option);
 
 			switch (option) {
 
-			case '1' -> controller.registrer(createAccount());
+			case 1 -> {
 
-			case '2' -> controller.listAll();
+				controller.registrer(createAccount());
 
-			case '3' -> controller.findByAccountNumber(getIntegerInput("Enter the number to search:"));
+			}
 
-			case '4' -> {
+			case 2 -> {
+				controller.listAll();
+
+			}
+
+			case 3 -> {
+				controller.findByAccountNumber(getIntegerInput("Enter the number to search:"));
+			}
+
+			case 4 -> {
 
 				int find = getIntegerInput("Enter account number to update:");
 
 				var account = controller.findAccount(find);
-				
-				System.out.println(account);
+
 				if (account.isPresent()) {
 
 					controller.update(createAccount());
 				}
 			}
 
-			case '5' -> controller.delete(getIntegerInput("Enter the number to delete:"));
+			case 5 -> controller.delete(getIntegerInput("Enter account number to delete:"));
+
+			case 6 -> {
+
+				controller.withdraw(getIntegerInput("Account number:"), getDoubleInput("Withdrawal amount:"));
+			}
+
+			case 7 -> {
+
+				controller.deposit(getIntegerInput("Account number:"), getDoubleInput("Deposit amount:"));
+			}
 
 			default -> System.out.println("to do");
 			}
@@ -60,8 +98,8 @@ public class Menu {
 
 	}
 
-	public static boolean continueLoop(char option) {
-		return option != '9';
+	public static boolean continueLoop(int option) {
+		return option != 9;
 	}
 
 	private static char getCharInput(String message) {
@@ -76,7 +114,8 @@ public class Menu {
 
 	private static String getStringInput(String message) {
 
-		System.out.println(message);
+		System.out.println(Colors.theme + message);
+		System.out.printf(Colors.TEXT_RESET);
 		return read.nextLine();
 	}
 
@@ -102,11 +141,12 @@ public class Menu {
 		if (type == 1) {
 
 			limit = getDoubleInput("Enter the account limit:");
-			return new Current_Account(1, 410, agency, holder, balance, limit);
+			return new Current_Account(controller.generateId(), agency, type, holder, balance, limit);
 		} else {
 			dateOfBirth = getStringInput("Enter your birthday:");
 
-			return new Savings_Account(1, 410, agency, holder, balance, Converter.stringToLocalDate(dateOfBirth));
+			return new Savings_Account(controller.generateId(), agency, type, holder, balance,
+					Converter.stringToLocalDate(dateOfBirth));
 		}
 
 	}
@@ -123,24 +163,17 @@ public class Menu {
 		}
 	}
 
-	public static void showOperationsMenu() {
-		System.out.println(Colors.theme + "o--------------------------------------------------o");
-		System.out.println("|-------------- BANCO GENERATION BRAZIL -----------|");
-		System.out.println("o--------------------------------------------------o");
-		System.out.println("|            1- Create Account                     |");
-		System.out.println("|            2- List All Accounts                  |");
-		System.out.println("|            3- Find Account by number             |");
-		System.out.println("|            4- Update Data of Account             |");
-		System.out.println("|            5- Delete Account                     |");
-		System.out.println("|            6- Withdraw Money                     |");
-		System.out.println("|            7- Cash Deposit                       |");
-		System.out.println("|            8- Make Transfers                     |");
-		System.out.println("|            9- Exit                               |");
-		System.out.println("o--------------------------------------------------o");
-		System.out.println("|           Select the desired option:             |");
-		System.out.println("o--------------------------------------------------o");
-		System.out.println(Colors.TEXT_RESET);
+	public static void showOperation(int operation) {
+		
+		var menu = optionsMenuMain.split("\n");
+		
+		System.out.println(Colors.theme + menu[0] +
+				"\n" + menu[2 + operation] + "\n" + menu[2]);
+	}
 
+	public static void showOptionsMain() {
+		System.out.println(Colors.theme + optionsMenuMain);
+		System.out.printf(Colors.TEXT_RESET);
 	}
 
 	public static void showAboutProgram() {

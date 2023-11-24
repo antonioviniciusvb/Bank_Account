@@ -82,7 +82,7 @@ public abstract class Account {
 
 	public String toString() {
 
-		return "******** Data Account ********\n" + String.format("Holder: %s\n", this.holder)
+		return String.format("Holder: %s\n", this.holder)
 				+ String.format("Account Number: %d\n", this.number) + String.format("Agency: %d\n", this.agency)
 				+ String.format("Type: %s\n", getTypeDescription()) + String.format("Balance: $ %.2f\n", this.balance);
 	}
