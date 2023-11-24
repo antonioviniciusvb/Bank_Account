@@ -2,6 +2,8 @@ package bank_account.util;
 
 public class Colors {
 
+		public static String theme = Colors.TEXT_WHITE_BOLD_BRIGHT + Colors.TEXT_BLUE_BRIGHT;
+		
 		//Reset Color
 		public static final String TEXT_RESET = "\u001B[0m";
 
