@@ -34,6 +34,19 @@ public class Menu {
 
 			case '3' -> controller.findByAccountNumber(getIntegerInput("Enter the number to search:"));
 
+			case '4' -> {
+
+				int find = getIntegerInput("Enter account number to update:");
+
+				var account = controller.findAccount(find);
+				
+				System.out.println(account);
+				if (account.isPresent()) {
+
+					controller.update(createAccount());
+				}
+			}
+
 			case '5' -> controller.delete(getIntegerInput("Enter the number to delete:"));
 
 			default -> System.out.println("to do");
@@ -46,7 +59,7 @@ public class Menu {
 		showAboutProgram();
 
 	}
-	
+
 	public static boolean continueLoop(char option) {
 		return option != '9';
 	}
@@ -123,9 +136,9 @@ public class Menu {
 		System.out.println("|            7- Cash Deposit                       |");
 		System.out.println("|            8- Make Transfers                     |");
 		System.out.println("|            9- Exit                               |");
-		System.out.println(Colors.theme + "o--------------------------------------------------o");
-		System.out.println(Colors.theme + "|           Select the desired option:             |");
-		System.out.println(Colors.theme + "o--------------------------------------------------o");
+		System.out.println("o--------------------------------------------------o");
+		System.out.println("|           Select the desired option:             |");
+		System.out.println("o--------------------------------------------------o");
 		System.out.println(Colors.TEXT_RESET);
 
 	}

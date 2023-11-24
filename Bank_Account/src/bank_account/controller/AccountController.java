@@ -1,6 +1,7 @@
 package bank_account.controller;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import bank_account.model.Account;
 import bank_account.repository.AccountRepository;
@@ -15,8 +16,8 @@ public class AccountController implements AccountRepository {
 	public void findByAccountNumber(int accountNumber) {
 		var account = findAccount(accountNumber);
 
-		if (account != null)
-			System.out.println(Colors.ANSI_GREEN_BACKGROUND + account);
+		if (account.isPresent())
+			System.out.println(Colors.ANSI_GREEN_BACKGROUND + account.get());
 		else
 			System.err.println("Account number not found");
 
@@ -38,13 +39,19 @@ public class AccountController implements AccountRepository {
 	@Override
 	public void registrer(Account account) {
 		accounts.add(account);
-		System.out.printf(Colors.ANSI_GREEN_BACKGROUND + 
-				"Account %d successfully created\n", account.getNumber());
+		System.out.printf(Colors.ANSI_GREEN_BACKGROUND + "Account %d successfully created\n", account.getNumber());
 	}
 
 	@Override
 	public void update(Account account) {
-		// TODO Auto-generated method stub
+
+		var findAccount = findAccount(account.getNumber());
+
+		if (findAccount.isPresent()) {
+			accounts.set(accounts.indexOf(findAccount.get()), account);
+			System.out.printf("Account number: %d has been successfully removed\n", account.getNumber());
+		} else
+			System.err.println("Account number not found");
 
 	}
 
@@ -53,9 +60,9 @@ public class AccountController implements AccountRepository {
 
 		var account = findAccount(number);
 
-		if (account != null)
-			if (accounts.remove(account))
-				System.out.printf("Account number: %d has been successfully removed\n", account.getNumber());
+		if (account.isPresent())
+			if (accounts.remove(account.get()))
+				System.out.printf("Account number: %d has been successfully removed\n", account.get());
 			else
 				System.err.println("Account number not found");
 
@@ -83,13 +90,13 @@ public class AccountController implements AccountRepository {
 		return ++id;
 	}
 
-	private Account findAccount(int number) {
+	public Optional<Account> findAccount(int number) {
 
 		for (var account : accounts)
 			if (account.getNumber() == number)
-				return account;
+				return Optional.of(account);
 
-		return null;
+		return Optional.empty();
 	}
 
 }
