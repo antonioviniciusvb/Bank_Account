@@ -1,6 +1,6 @@
 package bank_account.model;
 
-public class Account {
+public abstract class Account {
 
 	private int number;
 	private int agency;
