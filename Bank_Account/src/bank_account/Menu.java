@@ -1,16 +1,13 @@
 package bank_account;
 
-import java.io.IOException;
-import java.util.Scanner;
-
 import bank_account.controller.AccountController;
 import bank_account.model.Account;
 import bank_account.model.Current_Account;
 import bank_account.model.Savings_Account;
 import bank_account.util.Colors;
 import bank_account.util.Converter;
-import bank_account.util.Text;
-import bank_account.util.Validator;
+import bank_account.util.Input;
+import bank_account.util.OutPut;
 
 public class Menu {
 
@@ -30,8 +27,6 @@ public class Menu {
 			+ "|           Select the desired option:             |\n"
 			+ "o--------------------------------------------------o";
 
-	public static Scanner read = new Scanner(System.in);
-
 	static AccountController controller = new AccountController();
 
 	public static void main(String[] args) {
@@ -41,134 +36,104 @@ public class Menu {
 		do {
 
 			showOptionsMain();
-			option = getIntegerInput("");
+			option = Input.getInteger("");
 			System.out.println();
 
 			showOperation(option);
 
 			switch (option) {
 
-			case 1 -> {
+			case 1 -> controller.registrer(createAccount(0, 0));
 
-				controller.registrer(createAccount());
+			case 2 -> controller.listAll();
 
-			}
-
-			case 2 -> {
-				controller.listAll();
-
-			}
-
-			case 3 -> {
-				controller.findByAccountNumber(getIntegerInput("Enter the number to search:"));
-			}
+			case 3 -> controller.findByAccountNumber(Input.getInteger("Enter the number to search:"));
 
 			case 4 -> {
 
-				int find = getIntegerInput("Enter account number to update:");
+				var account = controller.findAccount(Input.getInteger("Enter account number to update:"));
 
-				var account = controller.findAccount(find);
+				if (account.isPresent())
+					controller.update(createAccount(account.get().getNumber(), account.get().getType()));
+				else
+					OutPut.printFailed(controller.errorOperation);
+			}
 
-				if (account.isPresent()) {
+			case 5 -> controller.delete(Input.getInteger("Enter account number to delete:"));
 
-					controller.update(createAccount());
+			case 6 -> controller.withdraw(Input.getInteger("Account number:"), Input.getDouble("Withdrawal amount:"));
+
+			case 7 -> controller.deposit(Input.getInteger("Account number:"), Input.getDouble("Deposit amount:"));
+
+			case 8 -> {
+
+				var origin = controller.findAccount(Input.getInteger("Origin Account:"));
+				var destination = controller.findAccount(Input.getInteger("Destination Account:"));
+				var transfer = Input.getDouble("Transfer value:");
+
+				if (origin.isPresent() && destination.isPresent()) {
+
+					controller.transfer(origin, destination, transfer);
+				} else {
+					OutPut.printFailed(controller.errorOperation);
 				}
 			}
 
-			case 5 -> controller.delete(getIntegerInput("Enter account number to delete:"));
-
-			case 6 -> {
-
-				controller.withdraw(getIntegerInput("Account number:"), getDoubleInput("Withdrawal amount:"));
 			}
 
-			case 7 -> {
-
-				controller.deposit(getIntegerInput("Account number:"), getDoubleInput("Deposit amount:"));
-			}
-
-			default -> System.out.println("to do");
-			}
-
-			systemPause();
+			Input.systemPause();
 
 		} while (continueLoop(option));
 
 		showAboutProgram();
-
 	}
 
 	public static boolean continueLoop(int option) {
 		return option != 9;
 	}
 
-	private static char getCharInput(String message) {
+	private static Account createAccount(int accountNumber, int accountType) {
 
-		return getStringInput(message).charAt(0);
-	}
-
-	private static int getIntegerInput(String message) {
-
-		return Integer.parseInt(getStringInput(message));
-	}
-
-	private static String getStringInput(String message) {
-
-		System.out.println(Colors.theme + message);
-		System.out.printf(Colors.TEXT_RESET);
-		return read.nextLine();
-	}
-
-	private static double getDoubleInput(String message) {
-
-		return Double.parseDouble(getStringInput(message));
-	}
-
-	private static Account createAccount() {
-
-		int agency, type;
+		int agency, type, number;
 		String holder, dateOfBirth;
 		double balance = 0.0d, limit = 0.0d;
 
-		agency = getIntegerInput("Enter the agency number:");
+		number = defineAccountNumber(accountNumber);
+		type = defineAccountType(accountType);
 
-		holder = getStringInput("Enter the name of the holder:");
+		agency = Input.getInteger("Enter the agency number:");
 
-		balance = getDoubleInput("Enter the account balance:");
+		holder = Input.getString("Enter the name of the holder:");
 
-		type = getIntegerInput("1- Current account\n2- Savings account\nChoose account option:");
+		balance = Input.getDouble("Enter the account balance:");
+
+		if (type == 0)
+			type = Input.getInteger("1- Current account\n2- Savings account\nChoose account option:");
 
 		if (type == 1) {
 
-			limit = getDoubleInput("Enter the account limit:");
-			return new Current_Account(controller.generateId(), agency, type, holder, balance, limit);
+			limit = Input.getDouble("Enter the account limit:");
+			return new Current_Account(number, agency, type, holder, balance, limit);
 		} else {
-			dateOfBirth = getStringInput("Enter your birthday:");
+			dateOfBirth = Input.getString("Enter your birthday:");
 
-			return new Savings_Account(controller.generateId(), agency, type, holder, balance,
-					Converter.stringToLocalDate(dateOfBirth));
+			return new Savings_Account(number, agency, type, holder, balance, Converter.stringToLocalDate(dateOfBirth));
 		}
-
 	}
 
-	public static void systemPause() {
+	private static int defineAccountType(int accountType) {
+		return accountType == 1 || accountType == 2 ? accountType : 0;
+	}
 
-		try {
-			System.out.println(Colors.TEXT_RESET + "\nPress enter to continue:");
-			System.in.read();
-			read.skip("\\R");
-
-		} catch (IOException e) {
-			System.err.println("KeyPress invalid");
-		}
+	private static int defineAccountNumber(int accountNumber) {
+		return accountNumber > 0 ? accountNumber : controller.generateId();
 	}
 
 	public static void showOperation(int operation) {
-		
+
 		var menu = optionsMenuMain.split("\n");
-		
-		System.out.println(Colors.theme + menu[0] +
-				"\n" + menu[2 + operation] + "\n" + menu[2]);
+
+		System.out.println(Colors.theme + menu[0] + "\n" + menu[2 + operation] + "\n" + menu[2]);
 	}
 
 	public static void showOptionsMain() {

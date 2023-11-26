@@ -1,6 +1,6 @@
 package bank_account.model;
 
-import bank_account.util.Colors;
+import bank_account.util.OutPut;
 
 public class Current_Account extends Account {
 
@@ -34,7 +34,7 @@ public class Current_Account extends Account {
 
 		if (this.getBalance() + this.limit < value) {
 
-			System.out.println(Colors.failed + "Insufficient funds");
+			OutPut.printFailed("Insufficient funds");
 			return false;
 
 		} else {
