@@ -1,7 +1,9 @@
 package bank_account.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import bank_account.model.Account;
 import bank_account.repository.AccountRepository;
@@ -142,6 +144,22 @@ public class AccountController implements AccountRepository {
 				return Optional.of(account);
 
 		return Optional.empty();
+	}
+
+	@Override
+	public void findByAgency(int accountNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void findByHolder(String holder) {
+		var account = accounts.stream()
+				.filter(a -> a.getHolder().contains(holder))
+				.collect(Collectors.toList());
+		
+	 account.forEach(x -> System.out.println(x));
+
 	}
 
 }

@@ -7,6 +7,8 @@ import bank_account.model.Account;
 public interface AccountRepository {
 
 	public void findByAccountNumber(int accountNumber);
+	public void findByAgency(int accountNumber);
+	public void findByHolder(String holder);
 	public void listAll();
 	public void registrer(Account account);
 	public void update(Account account);

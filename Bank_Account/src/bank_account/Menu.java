@@ -22,7 +22,8 @@ public class Menu {
 			+ "|            6- Withdraw Money                     |\n"
 			+ "|            7- Cash Deposit                       |\n"
 			+ "|            8- Make Transfers                     |\n"
-			+ "|            9- Exit                               |\n"
+			+ "|            9- Find Account by Holder             |\n"
+			+ "|            0- Exit                               |\n"
 			+ "o--------------------------------------------------o\n"
 			+ "|           Select the desired option:             |\n"
 			+ "o--------------------------------------------------o";
@@ -79,6 +80,8 @@ public class Menu {
 				}
 			}
 
+			case 9 -> controller.findByHolder(Input.getString("Enter account holder to find:"));
+
 			}
 
 			Input.systemPause();
@@ -89,7 +92,7 @@ public class Menu {
 	}
 
 	public static boolean continueLoop(int option) {
-		return option != 9;
+		return option != 0;
 	}
 
 	private static Account createAccount(int accountNumber, int accountType) {
